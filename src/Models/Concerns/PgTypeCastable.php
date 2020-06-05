@@ -10,7 +10,7 @@ trait PgTypeCastable
     /**
      * Cast an attribute to a native PHP types.
      *
-     * Added cast types: 'pg_array'
+     * Added cast types: 'pg_array', 'pg_text_array', 'pg_uuid_array', 'pg_int_array', 'pg_numeric_array'
      *
      * @param  string   $key
      * @param  mixed    $value
@@ -20,20 +20,21 @@ trait PgTypeCastable
     {
         $ret = $value;
         if (!is_null($value)) {
-            $caseType = $this->getCastType($key);
+            $castType = $this->getCastType($key);
             $pgArrayCastType = false;
-            switch ($caseType) {
+            switch ($castType) {
                 case 'pg_array':
-                    $pgCastType = null;
+                    $pgArrayCastType = null;
                     break;
                 case 'pg_text_array':
-                    $pgCastType = 'string';
+                case 'pg_uuid_array':
+                    $pgArrayCastType = 'string';
                     break;
                 case 'pg_int_array':
-                    $pgCastType = 'int';
+                    $pgArrayCastType = 'int';
                     break;
                 case 'pg_numeric_array':
-                    $pgCastType = 'float';
+                    $pgArrayCastType = 'float';
                     break;
             }
 
@@ -49,7 +50,7 @@ trait PgTypeCastable
     /**
      * Cast an attribute from native PHP types to custom and PjstgreSQL types.
      *
-     * Added cast types: 'pg_array', 'pg_point', 'pg_custom_dd_mm'
+     * Added cast types: 'pg_array', 'pg_text_array', 'pg_uuid_array', 'pg_int_array', 'pg_numeric_array'
      *
      * @param  string $key
      * @param  mixed  $value
