@@ -26,8 +26,8 @@ trait PgTypeCastable
                 case 'pg_array':
                     $pgArrayCastType = null;
                     break;
-                case 'pg_text_array':
                 case 'pg_uuid_array':
+                case 'pg_text_array':
                     $pgArrayCastType = 'string';
                     break;
                 case 'pg_int_array':
@@ -63,7 +63,13 @@ trait PgTypeCastable
         if (isset($this->casts[$key])) {
             switch ($this->getCastType($key)) {
                 case 'pg_array':
-                    $this->attributes[$key] = PgHelper::toPgArray($value);
+                case 'pg_uuid_array':
+                case 'pg_text_array':
+                case 'pg_int_array':
+                case 'pg_numeric_array':
+                    if (!is_null($value)) {
+                        $this->attributes[$key] = PgHelper::toPgArray($value);
+                    }
                     break;
                 default:
                     break;
